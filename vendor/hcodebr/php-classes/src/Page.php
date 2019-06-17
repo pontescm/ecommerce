@@ -12,34 +12,33 @@ class Page {
 		"data"=>[]
 	];
 
-	public function __construct($opts = array()){
-
+	public function __construct($opts = array(), $tpl_dir = "/views/")
+	{
 		$this->options = array_merge($this->defaults,$opts);
 
 		$config = array(
-					"tpl_dir"       => $_SERVER["DOCUMENT_ROOT"]."/views/",
+					"tpl_dir"       => $_SERVER["DOCUMENT_ROOT"].$tpl_dir,
 					"cache_dir"     => $_SERVER["DOCUMENT_ROOT"]."/views-cache/",
-					"debug"         => false // set to false to improve the speed
-				   );
+					"debug"         => true // set to false to improve the speed
+				   );		
 
 		Tpl::configure( $config );
 
 			// create the Tpl object
 		$this->tpl = new Tpl;
-
+		//var_dump($this->options["data"]);
 		$this->setData($this->options["data"]);
 
-		$this->tpl->draw("header");
-
+		$this->tpl->draw("header"); //desenha o cabeçalho na chamada do construtor da Página
 	}
 
 	private function setData($data = array())
 	{
-
 		foreach ($data as $key => $value) {
-			$this->tpl->assign($key,$value);
-		}
 
+			$this->tpl->assign($key,$value);			
+
+		}
 	}
 
 	public function setTpl($name, $data = array(), $returnHTML = false)
@@ -47,13 +46,11 @@ class Page {
 		$this->setData($data);
 
 		return $this->tpl->draw($name, $returnHTML);
-
 	}
 
-	public function __destruct(){
-
-		$this->tpl->draw("footer");
-
+	public function __destruct()
+	{
+		$this->tpl->draw("footer"); //desenha o rodapé na chamada do destruidor da Página
 	}
 
 }
